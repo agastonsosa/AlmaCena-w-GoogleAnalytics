@@ -80,3 +80,11 @@ database.database
 database.db
 diagram.png
 __pycache__/
+
+# Generated frontend assets
+public/*
+!public/.gitkeep
+!.vercelignore
+
+.vercel
+.env*

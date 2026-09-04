@@ -1,126 +1,83 @@
-# AlmaCena WebApp
+# AlmaCena
 
-A web application for chefs and users that enables inventory and recipe management. Users can track ingredients, create recipes, and automatically deduct used ingredients from the inventory. Additional features include inventory notifications.
+**Tu cocina, en su punto.** Una aplicación para organizar ingredientes, convertir recetas en producción y saber qué reponer. React + Flask + SQLAlchemy.
 
-Web application built using React.js for the frontend and python/flask for backend API.
+**[Probar la demo pública](https://almacena.vercel.app)** · Alojada en Vercel Hobby con PostgreSQL en Neon Free.
 
-- Integrated with Pipenv for package managing.
-- Fast deployment to heroku [in just a few steps here](https://start.4geeksacademy.com/backend/deploy-heroku-posgres).
-- Use of .env file.
-- SQLAlchemy integration for database abstraction.
+## Funcionalidades
 
-## Table of Contents
+- Cocina de demostración independiente, sin registro.
+- Cuentas con datos separados, perfil y cierre de sesión con revocación.
+- Ingredientes y productos con cantidades decimales, mínimos, búsqueda, categorías y exportación CSV.
+- Creación y edición de recetas, rendimiento y cálculo de las tandas posibles.
+- Elaboraciones que descuentan ingredientes y suman productos en una sola transacción, con historial y protección frente a stock insuficiente y solicitudes concurrentes.
+- Interfaz adaptable a escritorio y móvil, navegación por teclado, formularios etiquetados y confirmaciones de eliminación.
 
-1. [Installation](#installation)
-2. [Usage](#usage)
-3. [Project Structure](#project-structure)
-4. [Contribution](#contribution)
-5. [License](#license)
-6. [Contact](#contact)
+La demo comienza con ocho ingredientes, cuatro recetas y cuatro productos. Su actividad se genera al utilizarla; no son estadísticas simuladas.
 
-## 1) Installation:
+## Inicio local
 
-> If you use Github Codespaces (recommended) or Gitpod this template will already come with Python, Node and the Posgres Database installed. If you are working locally make sure to install Python 3.10, Node
+Requisitos: Python 3.12 y Node.js 22 o 24. Desde la raíz del repositorio, en PowerShell:
 
-It is recomended to install the backend first, make sure you have Python 3.8, Pipenv and a database engine (Posgress recomended)
-
-1. Install the python packages: `$ pipenv install`
-2. Create a .env file based on the .env.example: `$ cp .env.example .env`
-3. Install your database engine and create your database, depending on your database you have to create a DATABASE_URL variable with one of the possible values, make sure you replace the valudes with your database information:
-
-
-                                                | Engine    | DATABASE_URL                                        |
-                                                | --------- | --------------------------------------------------- |
-                                                | SQLite    | sqlite:////test.db                                  |
-                                                | MySQL     | mysql://username:password@localhost:port/example    |
-                                                | Postgress | postgres://username:password@localhost:5432/example |
-
-
-4. Migrate the migrations: `$ pipenv run migrate` (skip if you have not made changes to the models on the `./src/api/models.py`)
-5. Run the migrations: `$ pipenv run upgrade`
-6. Run the application: `$ pipenv run start`
-
-> Note: Codespaces users can connect to psql by typing: `psql -h localhost -U gitpod example`
-
-### Undo a migration
-
-You are also able to undo a migration by running
-
-```sh
-$ pipenv run downgrade
+```powershell
+python -m venv .venv
+.venv\Scripts\python.exe -m pip install -r requirements.txt
+npm ci
+Copy-Item .env.example .env
+.venv\Scripts\python.exe -m flask db upgrade
+.venv\Scripts\python.exe -m flask run --host 127.0.0.1 --port 3001
 ```
 
-### Backend Populate Table Users
+En una segunda terminal:
 
-To insert test users in the database execute the following command:
-
-```sh
-$ flask insert-test-users 5
+```powershell
+npm start
 ```
 
-And you will see the following message:
+Abre http://127.0.0.1:3000 y entra en la demo. El servidor de desarrollo reenvía `/api` a Flask en el puerto 3001. SQLite guarda los datos en `src/instance/almacena-local.sqlite`. No hace falta configurar servicios externos para los flujos principales.
 
+En macOS/Linux usa `.venv/bin/python` y `cp` en los comandos equivalentes. También están disponibles `pipenv sync`, `pipenv run upgrade` y `pipenv run start`. `Pipfile.lock` y `requirements.txt` describen las dependencias del backend.
+
+Configura una clave aleatoria `JWT_SECRET_KEY` en `.env` para mantener las sesiones entre reinicios. Sin ella, el modo de desarrollo genera una clave temporal; fuera de desarrollo, la aplicación exige configurarla. Nunca subas `.env` al repositorio.
+
+## Verificación
+
+```powershell
+npm run check
+npm run build
+.venv\Scripts\python.exe -m unittest discover -s tests -v
 ```
-  Creating test users
-  test_user1@test.com created.
-  test_user2@test.com created.
-  test_user3@test.com created.
-  test_user4@test.com created.
-  test_user5@test.com created.
-  Users created successfully!
-```
 
-### **Important note for the database and the data inside it**
+Las 32 pruebas utilizan una base temporal. Cubren autenticación, revocación de sesiones, aislamiento entre cocinas, validación de cantidades, relaciones, CRUD, recuperación de contraseña, límites de acceso y producción atómica, incluida concurrencia en SQLite. No utilizan tu base local ni envían correos reales. `npm run test:analytics` comprueba además la limpieza de datos enviados a GA4 y las preferencias de analítica.
 
-Every Github codespace environment will have **its own database**, so if you're working with more people eveyone will have a different database and different records inside it. This data **will be lost**, so don't spend too much time manually creating records for testing, instead, you can automate adding records to your database by editing `commands.py` file inside `/src/api` folder. Edit line 32 function `insert_test_data` to insert the data according to your model (use the function `insert_test_users` above as an example). Then, all you need to do is run `pipenv run insert-test-data`.
+`npm run build` genera `public/`, ignorado por Git. Flask puede servir ese resultado en http://127.0.0.1:3001.
 
-## 2) Usage
+## Organización
 
-### Front-End Manual Installation:
+| Ruta | Responsabilidad |
+| --- | --- |
+| `src/front/js/studio.js` | Rutas, carga diferida y límite de errores |
+| `src/front/js/app/` | Pantallas, formularios, contexto y cliente API |
+| `src/front/styles/studio.css` | Sistema visual y adaptación móvil |
+| `src/app.py` | API `/api`, validaciones, autenticación y transacciones |
+| `src/api/models.py` | Modelos y restricciones de datos |
+| `src/api/demo.py` | Datos de demostración |
+| `migrations/` | Evolución versionada de la base de datos |
+| `tests/test_api.py` | Pruebas de integración |
 
-- Make sure you are using node version 14+ and that you have already successfully installed and runned the backend.
+Los JWT duran dos horas, se guardan en `sessionStorage` y se revocan al cerrar sesión. Cambiar contraseña o desactivar la cuenta invalida las sesiones anteriores. Cada operación consulta los registros del usuario autenticado. La producción bloquea la receta en PostgreSQL y descuenta existencias mediante actualizaciones condicionales, con rollback ante cualquier fallo. Ocho pruebas adicionales sobre un esquema aislado en Neon comprobaron concurrencia, rollback, aislamiento y límites compartidos.
 
-1. Install the packages: `$ npm install`
-2. Start coding! start the webpack dev server `$ npm run start`
+## Publicación y servicios opcionales
 
-### Publish
+La aplicación está publicada en Vercel con PostgreSQL en Neon y GA4 conectado. Consulta [Publicación y GA4](docs/PUBLISHING.md) para mantenimiento y medición. Se retiraron las configuraciones antiguas de Render y Heroku para evitar que interfieran con la detección de Flask.
 
-Ready to deploy with Render.com and Heroku. Please read the [official documentation about it](https://start.4geeksacademy.com/deploy).
+- **Fotos:** configura `CLOUDINARY_URL` en el backend. Las recetas funcionan sin foto. JPG, PNG y WebP de hasta 5 MB.
+- **Recuperación:** configura `MAIL_*` y `FRONTEND_URL`. Sin SMTP, se informa que el envío no está disponible. Los enlaces caducan en 30 minutos y son de un solo uso.
+- **Demo:** `ENABLE_DEMO=true` permite crear cocinas temporales. Vercel programa una limpieza diaria de demos de más de 24 horas; el comando manual es `flask cleanup-demo`.
+- **Migraciones:** hacer copia de seguridad antes de `flask db upgrade`. La actualización conserva registros y añade restricciones; datos duplicados anteriores deben resolverse antes de migrar.
+- **Producción:** HTTPS, `FLASK_DEBUG=0`, orígenes explícitos y secretos nuevos. `RATELIMIT_STORAGE_URI=almacena://` utiliza contadores atómicos en PostgreSQL; la memoria local sirve para desarrollo.
+- **Credenciales históricas:** esta publicación utiliza secretos nuevos y no usa las credenciales expuestas por el código original. Su revocación en los antiguos proveedores sigue pendiente; retirarlas del código actual no las borra del historial de Git.
 
+## Autoría
 
-## 3) Project Structure
-
-- `src/`: Contains the application's source code.
-- `src/app.py`: Backend Server made with Pyhton.
-- `public/`: Static files.
-- `api/`: Contains API related files.
-- `api/models.py`: Database made in SQL Alchemy.
-- `api/commands.py`: Setup commands for automatization of filling up a DB.
-- `api/utils.py`: Contains HTML Code for showing the API.
-- `front/img/`: Contains img assets.
-- `front/js/`: Contains frontend JavaScript (React) related files.
-- `front/styles/`: Contains frontend CSS related files.
-- `.env`: Contains Backend and Frontend global variables.
-
-
-## 4) Contribution
-
-This template was built as part of the 4Geeks Academy [Coding Bootcamp](https://4geeksacademy.com/us/coding-bootcamp) by [Alejandro Sanchez](https://twitter.com/alesanchezr) and many other contributors. Find out more about our [Full Stack Developer Course](https://4geeksacademy.com/us/coding-bootcamps/part-time-full-stack-developer), and [Data Science Bootcamp](https://4geeksacademy.com/us/coding-bootcamps/datascience-machine-learning).
-
-You can find other templates and resources like this at the [school github page](https://github.com/4geeksacademy/).
-
-The web app was made by [Gaston Sosa](https://github.com/agastonsosa), [Sara Perez](https://github.com/sarap29) and [Sophia Magdalena](https://github.com/magdasoph92).
-
-## 5) License
-
-This project is a work in progress, and the license is currently being determined. Please check back later for updates on the project's licensing information.
-
-If you have any questions or suggestions regarding licensing, feel free to [contact us](agastonsosa@gmail.com).
-
-## 6) Contact
-
-- [Gaston Sosa](https://github.com/agastonsosa) 
-
-- [Sara Perez](https://github.com/sarap29)
-
-- [Sophia Magdalena](https://github.com/magdasoph92)
+Proyecto original de [Gaston Sosa](https://github.com/agastonsosa), [Sara Perez](https://github.com/sarap29) y [Sophia Magdalena](https://github.com/magdasoph92), desarrollado sobre la plantilla de 4Geeks Academy de Alejandro Sanchez y colaboradores. Se mantiene la autoría del proyecto y de la plantilla. Revisar el alcance de las licencias de código y recursos antes de redistribuir.

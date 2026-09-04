@@ -1,0 +1,12 @@
+.git
+.venv
+.local
+.env
+.env.*
+node_modules
+src/instance
+tests
+outputs
+work
+public/4geeks.ico
+public/rigo-baby.jpg
