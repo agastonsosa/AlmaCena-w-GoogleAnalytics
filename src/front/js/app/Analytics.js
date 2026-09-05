@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import "../../styles/analytics.css";
 import { Link, useLocation } from "react-router-dom";
-import { privacyContact } from "./privacy-contact";
 import {
   analyticsPage,
   analyticsReferrer,
@@ -128,8 +127,8 @@ export function Analytics() {
           <div>
             <h2>Tú decides sobre la analítica</h2>
             <p>
-              {privacyContact.name} utiliza almacenamiento necesario para que
-              AlmaCena funcione. Solo con tu permiso, usamos cookies de Google
+              En AlmaCena utilizamos almacenamiento necesario para que la
+              aplicación funcione. Solo con tu permiso, usamos cookies de Google
               Analytics para conocer las visitas, las páginas consultadas y su
               procedencia aproximada. No enviamos los datos de tu cocina ni de
               tu cuenta. Puedes rechazarlo y usar toda la aplicación. Puedes
