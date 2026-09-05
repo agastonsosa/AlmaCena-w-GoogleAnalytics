@@ -4,7 +4,7 @@ import { Button, Empty } from "./ui";
 import { Icon } from "./icons";
 import { useKitchen } from "./KitchenContext";
 import { fmt } from "./format";
-import pastry from "../../img/singlerecipe.png";
+import ingredients from "../../img/kitchen-ingredients.jpg";
 import { navItems } from "./navigation";
 
 function Overview({ open }) {
@@ -170,7 +170,7 @@ function Overview({ open }) {
               Abrir recetario <Icon name="arrow" />
             </Link>
           </div>
-          <img src={pastry} alt="Croissants dorados recién preparados" />
+          <img src={ingredients} alt="Ingredientes frescos listos para cocinar" />
         </section>
       </div>
       <div className="overview-bottom">

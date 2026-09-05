@@ -4,7 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import { Brand, Button, ErrorBox } from "./ui";
 import { Icon } from "./icons";
 import { useKitchen } from "./KitchenContext";
-import pastry from "../../img/singlerecipe.png";
+import ingredients from "../../img/kitchen-ingredients.jpg";
 import { request } from "./api";
 import { DemoButton } from "./Landing";
 
@@ -85,7 +85,7 @@ function Auth({ mode = "login" }) {
             <br />
             <em>todo a mano.</em>
           </h2>
-          <img src={pastry} alt="Croissants de mantequilla" />
+          <img src={ingredients} alt="Ingredientes frescos listos para cocinar" />
         </div>
         <p>Ingredientes · Recetas · Producción</p>
       </div>
