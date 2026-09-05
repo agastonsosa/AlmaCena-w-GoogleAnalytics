@@ -113,7 +113,6 @@ function Shell() {
           <button onClick={k.logout}>
             <Icon name="logout" /> Cerrar sesión
           </button>
-          <span className="sidebar-credit">ALMACENA / COCINA EN ORDEN</span>
         </div>
       </aside>
       <div className="workspace-content">

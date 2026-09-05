@@ -824,12 +824,10 @@ a:hover {
   background: #ffffff09;
   color: white;
 }
-.sidebar-credit {
-  font-size: 12px;
-  letter-spacing: 0.12em;
-  text-align: center;
-  color: #749284;
-  margin-top: 22px;
+@media (max-height: 800px) {
+  .sidebar-tip {
+    display: none;
+  }
 }
 .workspace-content {
   margin-left: 248px;
