@@ -36,3 +36,16 @@ test('persists rejection and removes only analytics cookies', () => {
   assert.equal(deleted.length, 6);
   assert.ok(deleted.every(v=>v.startsWith('_ga')));
 });
+
+test('requires a new choice after the privacy notice version changes', () => {
+  const values = new Map([['almacena-analytics-consent-v1', JSON.stringify({choice:'granted',date:Date.now()})]]);
+  const storage = {getItem:key=>values.get(key), setItem:(key,value)=>values.set(key,value)};
+  assert.equal(readConsent(storage), '');
+  saveConsent(storage, 'denied');
+  assert.equal(readConsent(storage), 'denied');
+  assert.ok(values.has('almacena-analytics-consent-v2'));
+});
+
+test('recognizes the public privacy page without preserving private queries', () => {
+  assert.equal(analyticsPage('https://kitchen.example/privacy?email=private@example.com').location, 'https://kitchen.example/privacy');
+});

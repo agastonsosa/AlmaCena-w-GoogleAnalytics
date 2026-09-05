@@ -149,7 +149,9 @@ function Landing() {
       </main>
       <footer className="landing-footer">
         <Brand />
-        <p>Hecho para que cocinar sea lo importante.</p>
+        <p>
+          <Link to="/privacy">Privacidad y cookies</Link>
+        </p>
         <span>AlmaCena © {new Date().getFullYear()}</span>
       </footer>
     </div>

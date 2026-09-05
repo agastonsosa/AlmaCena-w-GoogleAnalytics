@@ -5,6 +5,7 @@ export function analyticsPage(href) {
     "/",
     "/login",
     "/signup",
+    "/privacy",
     "/passwordrecovery",
     "/dashboard",
     "/dashboard/ingredients",
@@ -39,7 +40,7 @@ export function analyticsReferrer(referrer) {
   }
 }
 
-const consentKey = "almacena-analytics-consent-v1";
+const consentKey = "almacena-analytics-consent-v2";
 export function readConsent(storage, now = Date.now()) {
   try {
     const stored = JSON.parse(storage.getItem(consentKey));

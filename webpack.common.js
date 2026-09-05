@@ -35,8 +35,9 @@ module.exports = {
         },
       }, //for images
       {
-        test: /\.woff($|\?)|\.woff2($|\?)|\.ttf($|\?)|\.eot($|\?)|\.svg($|\?)/,
-        use: ["file-loader"],
+        test: /\.(woff2?|ttf|eot)$/,
+        type: "asset/resource",
+        generator: { filename: "fonts/[name][ext]" },
       }, //for fonts
     ],
   },

@@ -210,7 +210,7 @@ function Shell() {
           )}
         </main>
         <footer className="workspace-footer">
-          <span>Hecho para cocinar con calma.</span>
+          <Link to="/privacy">Privacidad y cookies</Link>
           <span>AlmaCena © {new Date().getFullYear()}</span>
         </footer>
       </div>

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import "../../styles/analytics.css";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { privacyContact } from "./privacy-contact";
 import {
   analyticsPage,
   analyticsReferrer,
@@ -22,6 +23,12 @@ export function Analytics() {
   const [settings, setSettings] = useState(false);
   const started = useRef(false);
   const previous = useRef("");
+  useEffect(() => {
+    if (consent !== "granted") {
+      clearAnalyticsCookies(document, window.location.hostname);
+    }
+  }, [consent]);
+
   useEffect(() => {
     const controller = new AbortController();
     fetch("/api/config", { signal: controller.signal })
@@ -60,6 +67,8 @@ export function Analytics() {
         send_page_view: false,
         allow_google_signals: false,
         allow_ad_personalization_signals: false,
+        cookie_expires: 180 * 86400,
+        cookie_update: false,
         page_location: initialPage.location,
         page_title: initialPage.title,
         page_referrer: analyticsReferrer(document.referrer),
@@ -109,28 +118,26 @@ export function Analytics() {
         className="analytics-preferences"
         onClick={() => setSettings(true)}
       >
-        Privacidad
+        Cookies y privacidad
       </button>
-      {(!consent || settings) && (
+      {((!consent && location.pathname !== "/privacy") || settings) && (
         <section
           className="analytics-notice"
           aria-label="Preferencias de privacidad"
         >
           <div>
-            <h2>Una pequeña ayuda para mejorar.</h2>
+            <h2>Tú decides sobre la analítica</h2>
             <p>
-              Con tu permiso, usamos Google Analytics para conocer las visitas,
-              las páginas consultadas y su procedencia aproximada. No enviamos
-              los datos de tu cocina ni de tu cuenta. Puedes rechazarlo y usar
-              toda la aplicación.
+              {privacyContact.name} utiliza almacenamiento necesario para que
+              AlmaCena funcione. Solo con tu permiso, usamos cookies de Google
+              Analytics para conocer las visitas, las páginas consultadas y su
+              procedencia aproximada. No enviamos los datos de tu cocina ni de
+              tu cuenta. Puedes rechazarlo y usar toda la aplicación. Puedes
+              cambiar tu elección en Cookies y privacidad.
             </p>
-            <a
-              href="https://policies.google.com/privacy"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Privacidad de Google
-            </a>
+            <Link to="/privacy" onClick={() => setSettings(false)}>
+              Política de privacidad y cookies
+            </Link>
           </div>
           <div className="analytics-actions">
             <button

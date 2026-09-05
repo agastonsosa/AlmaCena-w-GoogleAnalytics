@@ -11,6 +11,7 @@ import { Provider } from "./app/KitchenContext";
 import { Landing } from "./app/Landing";
 import { Auth } from "./app/Auth";
 import { Analytics } from "./app/Analytics";
+import { Privacy } from "./app/Privacy";
 const Shell = lazy(() =>
   import("./app/Shell").then((module) => ({ default: module.Shell }))
 );
@@ -39,7 +40,9 @@ function ScrollReset() {
   useEffect(() => {
     window.scrollTo(0, 0);
     document.title =
-      (pathname.includes("ingredients")
+      (pathname === "/privacy"
+        ? "Privacidad y cookies"
+        : pathname.includes("ingredients")
         ? "Ingredientes"
         : pathname.includes("recipes")
         ? "Recetario"
@@ -67,6 +70,7 @@ export default function Studio() {
           >
             <Routes>
               <Route path="/" element={<Landing />} />
+              <Route path="/privacy" element={<Privacy />} />
               <Route path="/login" element={<Auth key="login" />} />
               <Route
                 path="/signup"

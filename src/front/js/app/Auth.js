@@ -7,6 +7,7 @@ import { useKitchen } from "./KitchenContext";
 import ingredients from "../../img/kitchen-ingredients.jpg";
 import { request } from "./api";
 import { DemoButton } from "./Landing";
+import { privacyContact } from "./privacy-contact";
 
 function Auth({ mode = "login" }) {
   const { enter } = useKitchen(),
@@ -85,7 +86,10 @@ function Auth({ mode = "login" }) {
             <br />
             <em>todo a mano.</em>
           </h2>
-          <img src={ingredients} alt="Ingredientes frescos listos para cocinar" />
+          <img
+            src={ingredients}
+            alt="Ingredientes frescos listos para cocinar"
+          />
         </div>
         <p>Ingredientes · Recetas · Producción</p>
       </div>
@@ -142,6 +146,17 @@ function Auth({ mode = "login" }) {
                   ¿Olvidaste tu contraseña?
                 </Link>
               )}
+              {mode === "signup" && (
+                <p className="privacy-summary">
+                  Responsable: {privacyContact.name}. Usamos tus datos para
+                  crear y gestionar tu cuenta, como parte del servicio
+                  solicitado. Vercel y Neon alojan la aplicación y sus datos en
+                  Estados Unidos. Puedes ejercer tus derechos en{" "}
+                  {privacyContact.email}. La analítica es opcional y se elige
+                  por separado. Consulta la{" "}
+                  <Link to="/privacy">política de privacidad y cookies</Link>.
+                </p>
+              )}
               <Button busy={busy} className="full" type="submit">
                 {mode === "login"
                   ? "Entrar a mi cocina"
@@ -172,7 +187,7 @@ function Auth({ mode = "login" }) {
           )}
         </div>
         <p className="auth-bottom">
-          Un poco de orden. Mucho más espacio para crear.
+          <Link to="/privacy">Privacidad y cookies</Link>
         </p>
       </main>
     </div>
