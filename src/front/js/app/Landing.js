@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Brand, Button, ErrorBox } from "./ui";
 import { Icon } from "./icons";
 import { useKitchen } from "./KitchenContext";
-import pastry from "../../img/singlerecipe.png";
+import ingredients from "../../img/kitchen-ingredients.jpg";
 
 function DemoButton({ variant = "", children = "Explorar la demo" }) {
   const { enter } = useKitchen();
@@ -90,8 +90,10 @@ function Landing() {
               <Icon name="wheat" /> Del ingrediente a la mesa
             </div>
             <img
-              src={pastry}
-              alt="Croissants recién horneados sobre una tabla"
+              src={ingredients}
+              alt="Tomates, albahaca, limones y calabacín preparados sobre una mesa de cocina"
+              width="1024"
+              height="1536"
             />
             <div className="photo-caption">
               <span>
